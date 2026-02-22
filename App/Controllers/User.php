@@ -23,6 +23,19 @@ class User extends \Core\Controller
      */
     public function loginAction()
     {
+        // Connexion automatique via le cookie "se souvenir de moi"
+        if (!isset($_POST['submit']) && isset($_COOKIE['remember_me'])) {
+            $parts = explode(':', $_COOKIE['remember_me'], 2);
+            if (count($parts) === 2) {
+                $user = \App\Models\User::getById((int)$parts[0]);
+                if ($user && hash('sha256', $user['id'] . $user['salt']) === $parts[1]) {
+                    $_SESSION['user'] = ['id' => $user['id'], 'username' => $user['username']];
+                    header('Location: /account');
+                    exit();
+                }
+            }
+        }
+
         if(isset($_POST['submit'])){
             $f = $_POST;
 
@@ -111,9 +124,11 @@ class User extends \Core\Controller
                 return false;
             }
 
-            // TODO: Create a remember me cookie if the user has selected the option
-            // to remained logged in on the login form.
-            // https://github.com/andrewdyer/php-mvc-register-login/blob/development/www/app/Model/UserLogin.php#L86
+            // Cookie "se souvenir de moi"
+            if (isset($data['remember_me']) && $data['remember_me']) {
+                $token = hash('sha256', $user['id'] . $user['salt']);
+                setcookie('remember_me', $user['id'] . ':' . $token, time() + (30 * 24 * 60 * 60), '/');
+            }
 
             $_SESSION['user'] = array(
                 'id' => $user['id'],
@@ -138,11 +153,10 @@ class User extends \Core\Controller
      */
     public function logoutAction() {
 
-        /*
-        if (isset($_COOKIE[$cookie])){
-            // TODO: Delete the users remember me cookie if one has been stored.
-            // https://github.com/andrewdyer/php-mvc-register-login/blob/development/www/app/Model/UserLogin.php#L148
-        }*/
+        // Supprimer le cookie "se souvenir de moi" s'il existe
+        if (isset($_COOKIE['remember_me'])) {
+            setcookie('remember_me', '', time() - 3600, '/');
+        }
         // Destroy all data registered to the session.
 
         $_SESSION = array();
