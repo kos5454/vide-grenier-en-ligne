@@ -63,9 +63,24 @@ class Product extends \Core\Controller
             var_dump($e);
         }
 
+        $contactSuccess = false;
+        if (isset($_POST['contact_submit'])) {
+            $to = $article[0]['email'] ?? '';
+            $subject = 'Message depuis Vide Grenier En Ligne';
+            $message = htmlspecialchars($_POST['contact_message'] ?? '');
+            $from = htmlspecialchars($_POST['contact_email'] ?? '');
+            $name = htmlspecialchars($_POST['contact_name'] ?? '');
+            $headers = "From: $name <$from>\r\nReply-To: $from";
+            if (!empty($to)) {
+                mail($to, $subject, $message, $headers);
+            }
+            $contactSuccess = true;
+        }
+
         View::renderTemplate('Product/Show.html', [
             'article' => $article[0],
-            'suggestions' => $suggestions
+            'suggestions' => $suggestions,
+            'contact_success' => $contactSuccess
         ]);
     }
 }
