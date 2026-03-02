@@ -38,8 +38,22 @@
                     </div>
                     <div class="u-area mt-small">
 
-                    <a name="submit" href="mailto:{{article.email}}" class="btn btn-primary u-btn">Contacter {{article
-                        .username}}</a>
+                    <h4>Contacter {{ article.username }}</h4>
+                    {% if contact_success %}
+                    <div class="alert alert-success">Votre message a bien été envoyé !</div>
+                    {% endif %}
+                    <form action="" method="post">
+                        <div class="form-group">
+                            <input type="text" class="form-control" name="contact_name" placeholder="Votre nom" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="email" class="form-control" name="contact_email" placeholder="Votre email" required>
+                        </div>
+                        <div class="form-group">
+                            <textarea class="form-control" name="contact_message" rows="4" placeholder="Votre message" required></textarea>
+                        </div>
+                        <button type="submit" name="contact_submit" class="btn btn-primary u-btn">Envoyer</button>
+                    </form>
 
                     </div>
                 </div>
