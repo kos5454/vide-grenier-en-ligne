@@ -1,0 +1,1 @@
+{"version":1,"defects":[],"times":{"HashTest::testGenerateRetourneUneChaine":0.259,"HashTest::testGenerateMemeMdpMemeSel":0.021,"HashTest::testGenerateSelDifferentHashDifferent":0.054,"HashTest::testGenerateSaltLongueur":0,"HashTest::testGenerateSaltEstAleatoire":0,"HashTest::testGenerateUniqueRetourneChaine":0.018}}
