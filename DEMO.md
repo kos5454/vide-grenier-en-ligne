@@ -7,22 +7,26 @@
 Ces commandes sont à exécuter **une seule fois** avant le jour de la présentation.
 
 ```bash
-# 1. Merger les fichiers Docker dans develop et main
+# 1. S'assurer que develop a les fichiers Docker et les bugfixes
 git checkout develop
-git merge feature/docker-prod
 
+# 2. S'assurer que main est à jour avec develop (avec Copyright 2020)
 git checkout main
-git merge develop
+git merge develop --allow-unrelated-histories
 
-# 2. Merger les tests unitaires dans feature/test-unitaires (déjà fait)
-# La branche feature/test-unitaires contient déjà les fichiers Docker
+# 3. Lancer la prod (doit afficher Copyright 2020)
+./start-prod.sh
 
-# 3. Installer les dépendances PHPUnit
+# 4. Installer PHPUnit pour les tests unitaires
 git checkout feature/test-unitaires
-docker compose -f docker-compose.dev.yml up -d
+./start-dev.sh
 docker compose -f docker-compose.dev.yml exec web composer update
 docker compose -f docker-compose.dev.yml down
 ```
+
+**Vérifier avant la démo :**
+- http://localhost:8081 → `Copyright 2020` (prod, ancienne version)
+- `vendor/bin/phpunit` disponible sur `feature/test-unitaires`
 
 ---
 
@@ -33,7 +37,7 @@ Démarrer l'environnement de dev sur la branche `develop` :
 
 ```bash
 git checkout develop
-docker compose -f docker-compose.dev.yml up -d
+./start-dev.sh
 ```
 
 Site accessible sur : http://localhost:8080
@@ -83,7 +87,7 @@ Les tests sont sur la branche `feature/test-unitaires` et testent la classe `App
 ### Se placer sur la bonne branche
 ```bash
 git checkout feature/test-unitaires
-docker compose -f docker-compose.dev.yml up -d 
+./start-dev.sh
 ```
 
 ### Lancer les tests
@@ -130,7 +134,7 @@ docker compose -f docker-compose.prod.yml down
 # Lancer le dev → http://localhost:8080
 ./start-dev.sh
 
-# Lancer la prod → http://localhost:80
+# Lancer la prod → http://localhost:8081
 ./start-prod.sh
 ```
 
@@ -140,48 +144,52 @@ docker compose -f docker-compose.prod.yml down
 
 ### Principe
 - **Dev** (docker-compose.dev.yml) : port **8080**, volume monté → le code est lu en direct depuis le disque
-- **Prod** (docker-compose.prod.yml) : port **80**, pas de volume → le code est figé dans l'image Docker au moment du build
+- **Prod** (docker-compose.prod.yml) : port **8081**, pas de volume → le code est figé dans l'image Docker au moment du build
 
-### Étape 1 — Démarrer la prod sur l'ancienne version (main)
-
-Ouvrir un terminal dédié pour la prod :
-```bash
-git checkout main
-docker compose -f docker-compose.prod.yml up -d --build
-```
-
-Le site de prod est accessible sur http://localhost:80
+### Modification à préparer à l'avance
+Dans `App/Views/base.html`, changer `Copyright 2020` en `Copyright 2026`.
 
 ---
 
-### Étape 2 — Créer une feature branch et faire la modification (dev)
+### Étape 1 — Démarrer la prod sur l'ancienne version (main)
+
+```bash
+git checkout main
+./start-prod.sh
+```
+
+La prod affiche `Copyright 2020` sur http://localhost:8081
+
+---
+
+### Étape 2 — Créer la feature branch et faire la modification
 
 ```bash
 git checkout develop
-git checkout -b feature/ma-modification
+git checkout -b feature/mise-a-jour-copyright
 ```
 
-Faire la modification de code (exemple : changer un texte, ajouter un champ...).
-**Préparer la modification à l'avance pour ne pas perdre de temps.**
+Modifier `App/Views/base.html` : `Copyright 2020` → `Copyright 2026`
 
 Démarrer le dev :
 ```bash
-docker compose -f docker-compose.dev.yml up -d
+./start-dev.sh
 ```
 
-Le dev est accessible sur http://localhost:8080 → **la modification est visible immédiatement** (volume monté).
-La prod sur http://localhost:80 → **affiche toujours l'ancienne version**.
+- Dev http://localhost:8080 → affiche `Copyright 2026` ✓
+- Prod http://localhost:8081 → affiche encore `Copyright 2020` ✓
 
 ---
 
 ### Étape 3 — Merger dans develop puis main (GitFlow)
 
 ```bash
-# Merger la feature dans develop
-git checkout develop
-git merge feature/ma-modification
+git add App/Views/base.html
+git commit -m "mise a jour copyright 2026"
 
-# Merger develop dans main
+git checkout develop
+git merge feature/mise-a-jour-copyright
+
 git checkout main
 git merge develop
 ```
@@ -190,9 +198,8 @@ git merge develop
 
 ### Étape 4 — Mettre à jour la production
 
-Rebuilder l'image Docker de prod avec le nouveau code :
 ```bash
-docker compose -f docker-compose.prod.yml up -d --build
+./start-prod.sh
 ```
 
-La prod sur http://localhost:80 → **affiche maintenant la nouvelle version**.
+La prod http://localhost:8081 → **affiche maintenant `Copyright 2026`** ✓
