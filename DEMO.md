@@ -99,18 +99,17 @@ docker compose -f docker-compose.dev.yml exec web ./vendor/bin/phpunit
 ```
 PHPUnit 9.6.34 by Sebastian Bergmann and contributors.
 
-..                                                              2 / 2 (100%)
+.                                                              1 / 1 (100%)
 
-Time: 00:00.250, Memory: 6.00 MB
+Time: 00:00.150, Memory: 6.00 MB
 
-OK (2 tests, 2 assertions)
+OK (1 test, 1 assertion)
 ```
 
-### Les 2 tests couverts (fichier `tests/HashTest.php`)
+### Le test couvert (fichier `tests/HashTest.php`)
 | Test | Ce qu'il vérifie |
 |---|---|
 | `testGenerateRetourneUneChaine` | `Hash::generate()` retourne une string |
-| `testGenerateSaltLongueur` | `Hash::generateSalt(32)` retourne exactement 32 caractères |
 
 ---
 
