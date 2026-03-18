@@ -99,22 +99,18 @@ docker compose -f docker-compose.dev.yml exec web ./vendor/bin/phpunit
 ```
 PHPUnit 9.6.34 by Sebastian Bergmann and contributors.
 
-......                                                              6 / 6 (100%)
+..                                                              2 / 2 (100%)
 
-Time: 00:00.459, Memory: 6.00 MB
+Time: 00:00.250, Memory: 6.00 MB
 
-OK (6 tests, 6 assertions)
+OK (2 tests, 2 assertions)
 ```
 
-### Les 6 tests couverts (fichier `tests/HashTest.php`)
+### Les 2 tests couverts (fichier `tests/HashTest.php`)
 | Test | Ce qu'il vérifie |
 |---|---|
-| `testGenerateRetourneUneChaine` | `Hash::generate()` retourne bien une string |
-| `testGenerateMemeMdpMemeSel` | Même mot de passe + même sel = même hash |
-| `testGenerateSelDifferentHashDifferent` | Deux sels différents produisent des hashs différents |
+| `testGenerateRetourneUneChaine` | `Hash::generate()` retourne une string |
 | `testGenerateSaltLongueur` | `Hash::generateSalt(32)` retourne exactement 32 caractères |
-| `testGenerateSaltEstAleatoire` | Deux sels générés sont toujours différents |
-| `testGenerateUniqueRetourneChaine` | `Hash::generateUnique()` retourne une chaîne non vide |
 
 ---
 
