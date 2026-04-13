@@ -1668,34 +1668,23 @@ footer {
     margin-right: 80px; }
     .login-wraper .login-window .l-head {
       background-color: #ffffff;
-      padding: 40px;
+      padding: 35px 40px;
       border-bottom: solid 1px #eceff0;
       font-weight: 500;
       font-size: 22px;
       color: #343434;
-      border-top-left-radius: 3px;
-      border-top-right-radius: 3px; }
-      @media only screen and (max-width: 767px) {
-        .login-wraper .login-window .l-head {
-          background-color: #fbfdfe; } }
+      border-top-left-radius: 6px;
+      border-top-right-radius: 6px; }
     .login-wraper .login-window .l-form {
       text-align: left;
       background-color: #fbfdfe;
-      border-bottom-left-radius: 3px;
-      border-bottom-right-radius: 3px;
-      padding: 25px 70px 70px; }
+      border-bottom-left-radius: 6px;
+      border-bottom-right-radius: 6px;
+      padding: 25px 40px 40px; }
       .login-wraper .login-window .l-form label {
         font-weight: 500; }
-      @media only screen and (max-width: 767px) {
-        .login-wraper .login-window .l-form .btn {
-          border-radius: 30px;
-          padding-top: 16px;
-          padding-bottom: 12px; } }
   .login-wraper .checkbox {
     font-weight: normal; }
-    @media only screen and (max-width: 767px) {
-      .login-wraper .checkbox {
-        margin-bottom: 30px; } }
     .login-wraper .checkbox p {
       margin-bottom: 4px; }
     .login-wraper .checkbox .text2 {
@@ -1722,20 +1711,21 @@ footer {
 .banner-text {
   position: absolute;
   top: 50%;
-  left: 50%;
-  margin-top: -50px;
-  margin-left: -580px;
-  width: 550px; }
+  left: 8%;
+  transform: translateY(-50%);
+  width: 35%;
+  max-width: 450px; }
   .banner-text .line {
     height: 1px;
     border-top: solid 1px #ea2c5a;
-    padding-bottom: 50px;
-    width: 280px; }
+    padding-bottom: 40px;
+    width: 200px; }
   .banner-text .b-text {
     color: #ffffff;
     font-size: 80px;
     text-align: left;
-    line-height: 80px; }
+    line-height: 80px;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.25); }
     .banner-text .b-text .color-b1 {
       color: #b7135d; }
     .banner-text .b-text .color-b2 {
@@ -1743,41 +1733,39 @@ footer {
     .banner-text .b-text .color-b3 {
       color: #d71d52; }
   .banner-text .overtext {
-    margin-top: 30px;
-    color: #a1a1a1;
+    margin-top: 25px;
+    color: rgba(255, 255, 255, 0.85);
     text-align: left; }
 
 @media (min-width: 100px) and (max-width: 1365px) {
   .banner-text {
-    position: relative;
-    top: 0;
-    left: 0;
-    margin-top: 0;
-    margin-left: 0;
-    width: auto; }
-    .banner-text .line {
-      display: none; }
-    .banner-text .b-text {
-      color: #000000;
-      font-size: 30px;
-      text-align: center;
-      line-height: 30px;
-      padding-top: 30px; }
-    .banner-text .overtext {
-      margin: 15px 0;
-      color: #a1a1a1;
-      text-align: center; }
-  .login-wraper .login-window {
-    position: relative;
-    width: auto;
-    top: 0;
-    left: 0;
-    margin-left: 0;
-    margin-top: 0; }
-    .login-wraper .login-window .l-head {
-      padding: 20px 10px; }
-    .login-wraper .login-window .l-form {
-      padding: 25px 20px; } }
+    display: none; }
+  .login-wraper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #f4f5f7;
+    padding: 30px 20px 50px; }
+    .login-wraper .login-window {
+      position: relative;
+      width: 100%;
+      max-width: 520px;
+      top: auto;
+      right: auto;
+      transform: none;
+      box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1); }
+      .login-wraper .login-window .l-head {
+        padding: 20px 25px;
+        border-top-left-radius: 6px;
+        border-top-right-radius: 6px; }
+      .login-wraper .login-window .l-form {
+        padding: 20px 25px 30px;
+        border-bottom-left-radius: 6px;
+        border-bottom-right-radius: 6px; }
+        .login-wraper .login-window .l-form .btn {
+          border-radius: 30px;
+          padding-top: 16px;
+          padding-bottom: 12px; } }
 
 /*
 * Content Account END
