@@ -4,9 +4,6 @@
          bootstrap="vendor/autoload.php"
          cacheResultFile=".phpunit.cache/test-results"
          executionOrder="depends,defects"
-         forceCoversAfterClassToOnlyIncludeClassesInTheClassmap="false"
-         beStrictAboutCoversAnnotatedInterfacesAndTraits="false"
-         beStrictAboutCoverageMetadata="false"
          verbose="true">
     <testsuites>
         <testsuite name="Unit Tests">

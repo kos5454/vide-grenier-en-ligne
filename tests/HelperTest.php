@@ -13,10 +13,10 @@ class HelperTest extends TestCase
     /**
      * Test 1 : Valider une adresse email correcte
      */
-    public function testIsValidEmailWithCorrectEmail()
+    public function testIsValidEmailWithCorrectEmail() //fonction de test pour valider une adresse email correcte
     {
-        $email = 'user@example.com';
-        $result = Helper::isValidEmail($email);
+        $email = 'user@example.com'; 
+        $result = Helper::isValidEmail($email); 
 
         $this->assertTrue($result, 'L\'email devrait être valide');
     }
@@ -26,33 +26,31 @@ class HelperTest extends TestCase
      */
     public function testIsValidEmailWithInvalidEmail()
     {
-        $email = 'invalid-email';
-        $result = Helper::isValidEmail($email);
+        $email = 'invalid-email'; //regarde si l'email est invalide
+        $result = Helper::isValidEmail($email); //resultat de la validation de l'email
 
-        $this->assertFalse($result, 'L\'email devrait être invalide');
+        $this->assertFalse($result, 'L\'email devrait être invalide'); //envoie
     }
 
     /**
-     * Test 3 : Formater correctement un prix
+     * Test 3 : Tester si une chaîne vide
      */
-    public function testFormatPrice()
+    public function testIsEmptyWithEmptyString()
     {
-        $price = 45.5;
-        $expected = '45,50 €';
-        $result = Helper::formatPrice($price);
+        $text = '   ';
+        $result = Helper::isEmpty($text);
 
-        $this->assertEquals($expected, $result, 'Le prix devrait être formaté correctement');
+        $this->assertTrue($result, 'La chaîne vide devrait retourner true');
     }
 
     /**
-     * Test 4 : Compter le nombre de mots dans une chaîne
+     * Test 4 : Tester si une chaîne est non vide
      */
-    public function testCountWords()
+    public function testIsEmptyWithNonEmptyString()
     {
-        $text = 'Bonjour le monde';
-        $expected = 3;
-        $result = Helper::countWords($text);
+        $text = 'hello';
+        $result = Helper::isEmpty($text);
 
-        $this->assertEquals($expected, $result, 'Devrait compter 3 mots');
+        $this->assertFalse($result, 'La chaîne non vide devrait retourner false');
     }
 }
