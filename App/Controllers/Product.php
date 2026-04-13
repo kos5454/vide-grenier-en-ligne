@@ -55,6 +55,13 @@ class Product extends \Core\Controller
     {
         $id = $this->route_params['id'];
 
+        // Supprimer l'annonce
+        if (isset($_POST['delete_article']) && isset($_SESSION['user'])) {
+            Articles::delete($id, $_SESSION['user']['id']);
+            header('Location: /');
+            exit;
+        }
+
         try {
             Articles::addOneView($id);
             $suggestions = Articles::getSuggest();
@@ -80,7 +87,8 @@ class Product extends \Core\Controller
         View::renderTemplate('Product/Show.html', [
             'article' => $article[0],
             'suggestions' => $suggestions,
-            'contact_success' => $contactSuccess
+            'contact_success' => $contactSuccess,
+            'user' => $_SESSION['user'] ?? null
         ]);
     }
 }

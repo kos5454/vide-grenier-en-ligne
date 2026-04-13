@@ -9,26 +9,16 @@
   }
 }
 
-.login-wraper {
-  position: relative;
-  min-height: calc(100vh - 80px);
-  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+.login-wraper{
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  padding-right: 8%;
-
-  // cache le div contenant l'image (chemin cassé)
-  > div:not(.banner-text):not(.login-window) {
-    display: none;
-  }
-
+  min-height: calc(100vh - 80px);
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
   .login-window {
     position: relative;
-    width: 520px;
-    z-index: 2;
-    box-shadow: 0 4px 25px rgba(0, 0, 0, 0.12);
-
+    width: 570px;
+    margin-right: 80px;
     .l-head {
       background-color: $c-white;
       padding: 35px 40px;

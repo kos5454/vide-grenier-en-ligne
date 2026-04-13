@@ -1,7 +1,7 @@
 FROM php:8.1-fpm-alpine
 
-# Installation nginx et extensions PHP
-RUN apk add --no-cache nginx \
+# Installation nginx, git et extensions PHP
+RUN apk add --no-cache nginx git curl \
     && docker-php-ext-install pdo pdo_mysql
 
 # Installation Composer
@@ -13,6 +13,7 @@ WORKDIR /var/www/html
 COPY . .
 
 # Installation des dépendances composer
+ENV COMPOSER_ALLOW_SUPERUSER=1
 RUN composer install --no-dev --optimize-autoloader
 
 # Config nginx
