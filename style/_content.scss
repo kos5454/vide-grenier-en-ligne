@@ -106,10 +106,22 @@
     height: 200px;
     border-radius: 2px;
     position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
     img {
       object-fit: cover;
       height: 100%;
       width: 100%;
+      object-position: center;
+    }
+    a {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
     }
     .time {
       position: absolute;
@@ -570,7 +582,7 @@
 }
 
 .cb-content {
-    width: 130% !important; // FIX INTERNET EXPLORER ;
+    width: 100%;
 }
 
 /*
