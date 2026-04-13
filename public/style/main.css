@@ -718,11 +718,22 @@ video {
 .b-article .v-img {
   height: 200px;
   border-radius: 2px;
-  position: relative; }
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden; }
   .b-article .v-img img {
     object-fit: cover;
+    object-position: center;
     height: 100%;
     width: 100%; }
+  .b-article .v-img a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%; }
   .b-article .v-img .time {
     position: absolute;
     bottom: 0;
@@ -1083,7 +1094,7 @@ video {
         color: #ea2c5a; }
 
 .cb-content {
-  width: 130% !important; }
+  width: 100%; }
 
 /*
 * Content Index END
