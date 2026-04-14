@@ -1,200 +1,293 @@
-# Guide de démonstration
+# 🎬 Script de Démo - Vide Grenier En Ligne
+
+**Durée : 10-15 minutes**
 
 ---
 
-## PRÉPARATION (à faire avant la démo)
+## 🚀 ÉTAPE 0 : Démarrer l'environnement
 
-Ces commandes sont à exécuter **une seule fois** avant le jour de la présentation.
+### Lancer les containers
 
 ```bash
-# 1. S'assurer que develop a les fichiers Docker et les bugfixes
-git checkout develop
+cd C:\Users\matte\OneDrive\CESI\Projet\ Docker\vide-grenier-en-ligne
 
-# 2. S'assurer que main est à jour avec develop (avec Copyright 2020)
-git checkout main
-git merge develop --allow-unrelated-histories
-
-# 3. Lancer la prod (doit afficher Copyright 2020)
-./start-prod.sh
-
-# 4. Installer PHPUnit pour les tests unitaires
-git checkout feature/test-unitaires
-./start-dev.sh
-docker compose -f docker-compose.dev.yml exec web composer update
-docker compose -f docker-compose.dev.yml down
+# Démarrer DEV et PROD
+docker compose -p dev -f docker-compose.dev.yml up --build -d
+docker compose -p prod -f docker-compose.prod.yml up --build -d
 ```
 
-**Vérifier avant la démo :**
-- http://localhost:8081 → `Copyright 2020` (prod, ancienne version)
-- `vendor/bin/phpunit` disponible sur `feature/test-unitaires`
+### Ouvrir les onglets du navigateur
+
+- 🔵 **DEV** → http://localhost:8080
+- 🟠 **PROD** → http://localhost:8081
 
 ---
 
-## 1. Démonstration des 4 bugs corrigés
+## 📁 ÉTAPE 1 : Architecture du projet (2 min)
 
-### Mise en place
-Démarrer l'environnement de dev sur la branche `develop` :
+### Montrer la structure dans VS Code
 
-```bash
-git checkout develop
-./start-dev.sh
+```
+vide-grenier-en-ligne/
+├── App/
+│   ├── Controllers/   → Home, User, Product, Api
+│   ├── Models/        → Articles, User, Cities
+│   └── Views/         → Templates Twig
+├── Core/
+│   ├── Router.php
+│   ├── Controller.php
+│   └── Model.php      → Connexion PDO
+├── tests/             → Tests PHPUnit
+├── docker/            → Dockerfile, nginx.conf
+├── sql/               → Structure + données
+└── docker-compose*.yml
 ```
 
-Site accessible sur : http://localhost:8080
+### 💡 Points à souligner
+
+✅ **Architecture MVC sans framework** (PHP pur)
+✅ **3 environnements Docker** (dev / test / prod)
+✅ **Code séparé** : Core (générique) vs App (métier)
 
 ---
 
-### Bug 1 — Photo obligatoire dans une annonce (`bugfix/photo-obligatoire`)
-**Ce qui était cassé :** Il était possible de créer une annonce sans photo.
-**Comment le montrer :**
-1. Se connecter et aller sur "Créer une annonce"
-2. Remplir le formulaire sans ajouter de photo
-3. Soumettre → un message d'erreur s'affiche, l'annonce n'est pas créée
+## 🐳 ÉTAPE 2 : Les 3 environnements Docker (1 min)
+
+### Tableau comparatif
+
+| Environnement | Port | MySQL | Particularité |
+|---|---|---|---|
+| **DEV** | 8080 | 3306 | Code monté en volume → hot-reload ⚡ |
+| **TEST** | 8082 | 3307 | Base isolée pour tester |
+| **PROD** | 8081 | 3308 | Code copié dans l'image (standalone) |
+
+### 💡 Explication clé
+
+**DEV** : Modifier le code = changements visibles **immédiatement** sans rebuild
+**PROD** : Image autonome déployable n'importe où
 
 ---
 
-### Bug 2 — Connexion automatique après inscription (`bugfix/connexion-auto-inscription`)
-**Ce qui était cassé :** Après l'inscription, l'utilisateur n'était pas connecté automatiquement.
-**Comment le montrer :**
-1. Créer un nouveau compte
-2. Après la soumission du formulaire d'inscription → l'utilisateur est directement connecté et redirigé
+## 💻 ÉTAPE 3 : Démo fonctionnelle (5 min)
+
+### 3a. Page d'accueil
+
+1. Aller sur **http://localhost:8080**
+2. Montrer les annonces
+3. Tester le tri par "Popularité" / "Date" (AJAX sans rechargement)
+
+**Explication** : *Les annonces se chargent dynamiquement via /api/products*
 
 ---
 
-### Bug 3 — Se souvenir de moi (`bugfix/se-souvenir-de-moi`)
-**Ce qui était cassé :** La case "Se souvenir de moi" sur la page de connexion ne fonctionnait pas.
-**Comment le montrer :**
-1. Se connecter avec la case "Se souvenir de moi" cochée
-2. Fermer le navigateur et rouvrir http://localhost:8080
-3. L'utilisateur est toujours connecté
+### 3b. Inscription
+
+1. Cliquer **Inscription**
+2. Créer un compte :
+   - Email : `demo@test.fr`
+   - Mot de passe : `Demo1234`
+   - Nom : `Demo User`
+3. ✅ Redirection automatique vers "Mon compte"
+
+**Bug corrigé** : *Avant, il fallait se reconnecter après inscription. Maintenant c'est automatique.*
 
 ---
 
-### Bug 4 — Formulaire de contact sur la page produit (`bugfix/formulaire-contact`)
-**Ce qui était cassé :** Le formulaire de contact sur une page d'annonce ne fonctionnait pas.
-**Comment le montrer :**
-1. Aller sur une annonce
-2. Remplir et envoyer le formulaire de contact au vendeur
-3. Le message est bien envoyé sans erreur
+### 3c. Déposer une annonce
+
+1. Clicker **Déposer une annonce**
+2. Remplir le formulaire :
+   - Titre : Ex. "Vélo vintage"
+   - Description : Ex. "En bon état"
+   - Photo : Choisir une image
+   - Ville : Taper (autocomplete avec API réelle)
+3. Cliquer **Soumettre**
+4. ✅ Annonce créée et visible sur la page d'accueil
+
+**Explication** : *L'autocomplete utilise l'API officielle data.gouv.fr*
 
 ---
 
-## 2. Démonstration des tests unitaires
+### 3d. Modifier/Supprimer une annonce
 
-### Contexte
-Les tests sont sur la branche `feature/test-unitaires` et testent la classe `App\Utility\Hash`.
+1. Aller dans **Mon compte**
+2. Trouver l'annonce créée
+3. Cliquer **Modifier** → Changer le titre
+4. Sauvegarder → ✅ Notification flash de succès
+5. Montrer que la photo reste si on ne la change pas
 
-### Se placer sur la bonne branche
-```bash
-git checkout feature/test-unitaires
-./start-dev.sh
+---
+
+### 3e. Messagerie
+
+1. Se déconnecter
+2. Cliquer sur une annonce → **Contacter le vendeur**
+3. Remplir et envoyer un message
+4. Se reconnecter en tant que `demo@test.fr`
+5. Aller dans **Mes messages**
+6. ✅ Message reçu avec badge "non lu" (rouge)
+7. Cliquer dessus → Message marqué "lu"
+
+---
+
+## 🔒 ÉTAPE 4 : Sécurité (1 min)
+
+### Montrer dans VS Code
+
+**File : App/Utility/Hash.php**
 ```
+✅ Mots de passe en Argon2ID
+   (algorithme recommandé par PHP 8)
+```
+
+**File : App/Utility/Csrf.php**
+```
+✅ Token CSRF unique par formulaire
+   (protection contre les attaques)
+```
+
+**File : App/Controllers/User.php**
+```
+✅ Cookie "Se souvenir de moi" signé HMAC SHA-256
+   (impossible à forger)
+```
+
+---
+
+## 🧪 ÉTAPE 5 : Tests unitaires (2 min)
 
 ### Lancer les tests
+
 ```bash
-docker compose -f docker-compose.dev.yml exec web ./vendor/bin/phpunit
+docker compose -p dev -f docker-compose.dev.yml exec web php vendor/bin/phpunit
 ```
 
 ### Résultat attendu
+
 ```
-PHPUnit 9.6.34 by Sebastian Bergmann and contributors.
-
-.                                                              1 / 1 (100%)
-
-Time: 00:00.150, Memory: 6.00 MB
-
-OK (1 test, 1 assertion)
+....                                                                4 / 4 (100%)
+OK (4 tests, 4 assertions)
 ```
 
-### Le test couvert (fichier `tests/HashTest.php`)
-| Test | Ce qu'il vérifie |
+### Les 4 tests
+
+| Test | Description |
 |---|---|
-| `testGenerateRetourneUneChaine` | `Hash::generate()` retourne une string |
+| Test 1 | ✅ Valider un email correct |
+| Test 2 | ❌ Rejeter un email invalide |
+| Test 3 | ✅ Détecter une chaîne vide |
+| Test 4 | ❌ Détecter une chaîne non vide |
 
 ---
 
-### Gestion des environnements
+## 📚 ÉTAPE 6 : Documentation API - Swagger (1 min)
 
-**Pour supprimer les environnements :**
-```bash
-# Supprimer le dev
-docker compose -f docker-compose.dev.yml down
+### Fichier `swagger.json`
 
-# Supprimer la prod
-docker compose -f docker-compose.prod.yml down
+Le fichier contient la documentation de 2 endpoints :
+
+**GET /api/products**
+```
+Description : Récupère la liste des annonces
+Paramètre : sort (date, prix)
+Réponse : Array d'annonces (json)
 ```
 
-**Pour lancer les environnements :**
-```bash
-# Lancer le dev → http://localhost:8080
-./start-dev.sh
-
-# Lancer la prod → http://localhost:8081
-./start-prod.sh
+**GET /api/cities**
+```
+Description : Cherche les villes
+Paramètre : query (nom de la ville)
+Réponse : Array de villes
 ```
 
----
+### Visualiser
 
-## 3. Développement en live avec GitFlow
-
-### Principe
-- **Dev** (docker-compose.dev.yml) : port **8080**, volume monté → le code est lu en direct depuis le disque
-- **Prod** (docker-compose.prod.yml) : port **8081**, pas de volume → le code est figé dans l'image Docker au moment du build
-
-### Modification à préparer à l'avance
-Dans `App/Views/base.html`, changer `Copyright 2020` en `Copyright 2026`.
+1. Aller sur https://editor.swagger.io/
+2. **File** → **Import File** → `swagger.json`
+3. ✅ Documentation interactive
 
 ---
 
-### Étape 1 — Démarrer la prod sur l'ancienne version (main)
+## 🔄 ÉTAPE 7 : Workflow GitFlow (3 min)
+
+### Créer une nouvelle feature
 
 ```bash
-git checkout main
-./start-prod.sh
-```
-
-La prod affiche `Copyright 2020` sur http://localhost:8081
-
----
-
-### Étape 2 — Créer la feature branch et faire la modification
-
-```bash
+# 1. Créer branche feature
 git checkout develop
-git checkout -b feature/mise-a-jour-copyright
+git checkout -b feature/ma-nouvelle-feature
+
+# 2. Faire les modifications
+# (Les changements s'affichent immédiatement sur 8080 ⚡)
+
+# 3. Commiter et pousser
+git add .
+git commit -m "feat: description de ma feature"
+git push origin feature/ma-nouvelle-feature
 ```
 
-Modifier `App/Views/base.html` : `Copyright 2020` → `Copyright 2026`
-
-Démarrer le dev :
-```bash
-./start-dev.sh
-```
-
-- Dev http://localhost:8080 → affiche `Copyright 2026` ✓
-- Prod http://localhost:8081 → affiche encore `Copyright 2020` ✓
-
----
-
-### Étape 3 — Merger dans develop puis main (GitFlow)
+### Merger en Develop
 
 ```bash
-git add App/Views/base.html
-git commit -m "mise a jour copyright 2026"
+# 4. Sur GitHub : créer Merge Request
+# Base : develop ← Compare : feature/ma-nouvelle-feature
+# Cliquer "Merge pull request"
 
+# 5. En local
 git checkout develop
-git merge feature/mise-a-jour-copyright
+git pull origin develop
+```
 
-git checkout main
+### Déployer en PROD
+
+```bash
+# 6. Merger develop → PROD
+git checkout main (ou master)
+git pull origin main
 git merge develop
+git push origin main
+
+# 7. Rebuild PROD
+docker compose -p prod -f docker-compose.prod.yml up --build -d
 ```
+
+### Vérifier
+
+- ✅ DEV : http://localhost:8080
+- ✅ PROD : http://localhost:8081
 
 ---
 
-### Étape 4 — Mettre à jour la production
+## 📋 RÉSUMÉ - Ce qu'on a montré
 
-```bash
-./start-prod.sh
-```
+| ✅ | Fonctionnalité |
+|---|---|
+| ✅ | Architecture MVC custom (PHP pur) |
+| ✅ | 3 environnements Docker (dev/test/prod) |
+| ✅ | Tests unitaires PHPUnit |
+| ✅ | Workflow GitFlow (feature → dev → prod) |
+| ✅ | Documentation API Swagger |
+| ✅ | Sécurité (Argon2, CSRF, HMAC) |
+| ✅ | AJAX (tri annonces sans rechargement) |
+| ✅ | Messagerie interne |
+| ✅ | Hot-reload en DEV |
 
-La prod http://localhost:8081 → **affiche maintenant `Copyright 2026`** ✓
+---
+
+## 🎯 Points clés à retenir
+
+> **En DEV** : Le code est monté en volume
+> → Modifier un fichier = changements visibles immédiatement ⚡
+
+> **En PROD** : Le code est copié dans l'image Docker
+> → Image autonome déployable n'importe où 🚀
+
+> **GitFlow** : feature → develop → main
+> → Chaque branche a son utilité 🔀
+
+> **Tests** : 4 tests simples qui passent
+> → Validation du code 🧪
+
+---
+
+**Besoin d'aide pour lancer la démo ? 🚀**
