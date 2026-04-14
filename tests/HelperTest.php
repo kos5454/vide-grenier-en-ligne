@@ -13,10 +13,10 @@ class HelperTest extends TestCase
     /**
      * Test 1 : Valider une adresse email correcte
      */
-    public function testIsValidEmailWithCorrectEmail() //fonction de test pour valider une adresse email correcte
+    public function testIsValidEmailWithCorrectEmail() 
     {
         $email = 'user@example.com'; 
-        $result = Helper::isValidEmail($email); 
+        $result = Helper::isValidEmail($email);  
 
         $this->assertTrue($result, 'L\'email devrait être valide');
     }
@@ -26,8 +26,8 @@ class HelperTest extends TestCase
      */
     public function testIsValidEmailWithInvalidEmail()
     {
-        $email = 'invalid-email'; //regarde si l'email est invalide
-        $result = Helper::isValidEmail($email); //resultat de la validation de l'email
+        $email = 'invalid-email'; 
+        $result = Helper::isValidEmail($email); 
 
         $this->assertFalse($result, 'L\'email devrait être invalide'); //envoie
     }
@@ -48,7 +48,7 @@ class HelperTest extends TestCase
      */
     public function testIsEmptyWithNonEmptyString()
     {
-        $text = 'hello';
+        $text = 'aaa';
         $result = Helper::isEmpty($text);
 
         $this->assertFalse($result, 'La chaîne non vide devrait retourner false');
