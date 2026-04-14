@@ -1,0 +1,1 @@
+{"version":1,"defects":[],"times":{"Tests\\HelperTest::testIsValidEmailWithCorrectEmail":0.249,"Tests\\HelperTest::testIsValidEmailWithInvalidEmail":0.013,"Tests\\HelperTest::testIsEmptyWithEmptyString":0,"Tests\\HelperTest::testIsEmptyWithNonEmptyString":0}}
