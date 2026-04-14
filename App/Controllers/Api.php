@@ -14,17 +14,28 @@ class Api extends \Core\Controller
 {
 
     /**
+     * Configure CORS headers
+     */
+    private function setCorsHeaders()
+    {
+        header('Access-Control-Allow-Origin: *');
+        header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
+        header('Access-Control-Allow-Headers: Content-Type');
+        header('Content-Type: application/json');
+    }
+
+    /**
      * Affiche la liste des articles / produits pour la page d'accueil
      *
      * @throws Exception
      */
     public function ProductsAction()
     {
-        $query = $_GET['sort'];
+        $this->setCorsHeaders();
+        $query = $_GET['sort'] ?? '';
 
         $articles = Articles::getAll($query);
 
-        header('Content-Type: application/json');
         echo json_encode($articles);
     }
 
@@ -34,10 +45,10 @@ class Api extends \Core\Controller
      * @throws Exception
      */
     public function CitiesAction(){
+        $this->setCorsHeaders();
 
-        $cities = Cities::search($_GET['query']);
+        $cities = Cities::search($_GET['query'] ?? '');
 
-        header('Content-Type: application/json');
         echo json_encode($cities);
     }
 }

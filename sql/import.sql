@@ -28,7 +28,7 @@ CREATE TABLE `articles` (
   `user_id` int(11) NOT NULL,
   `views` int(10) UNSIGNED NOT NULL DEFAULT '0',
   `picture` varchar(200) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `articles`
@@ -80,7 +80,7 @@ CREATE TABLE `users` (
   `password` text NOT NULL,
   `salt` text NOT NULL,
   `is_admin` tinyint(4) NOT NULL DEFAULT '0'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `users`

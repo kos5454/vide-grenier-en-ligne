@@ -1,0 +1,134 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "API Vide-Grenier en Ligne",
+    "description": "Documentation de l'API pour l'application de vente en ligne",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8080",
+      "description": "Serveur DEV"
+    },
+    {
+      "url": "http://localhost:8081",
+      "description": "Serveur PROD"
+    }
+  ],
+  "paths": {
+    "/api/products": {
+      "get": {
+        "summary": "Récupère la liste des produits",
+        "description": "Retourne tous les produits/articles disponibles avec possibilité de trier",
+        "tags": ["Produits"],
+        "parameters": [
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Critère de tri (ex: date, prix)",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Liste des produits récupérée avec succès",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "integer",
+                        "example": 1
+                      },
+                      "name": {
+                        "type": "string",
+                        "example": "Vieux vélo"
+                      },
+                      "price": {
+                        "type": "number",
+                        "example": 45.50
+                      },
+                      "description": {
+                        "type": "string",
+                        "example": "Vélo vintage en bon état"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erreur serveur"
+          }
+        }
+      }
+    },
+    "/api/cities": {
+      "get": {
+        "summary": "Recherche les villes",
+        "description": "Permet de chercher les villes disponibles pour filtrer les annonces",
+        "tags": ["Villes"],
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "description": "Nom de la ville à chercher (ex: Paris, Lyon)",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Liste des villes trouvées",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "integer",
+                        "example": 1
+                      },
+                      "name": {
+                        "type": "string",
+                        "example": "Paris"
+                      },
+                      "postal_code": {
+                        "type": "string",
+                        "example": "75000"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Paramètre query manquant"
+          }
+        }
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Produits",
+      "description": "Les endpoints pour les produits/articles"
+    },
+    {
+      "name": "Villes",
+      "description": "Les endpoints pour chercher les villes"
+    }
+  ]
+}
